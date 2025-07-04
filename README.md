@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HealthChain MVP - Blockchain Healthcare Data Access Control
 
-## Getting Started
+A decentralized healthcare data management system that gives patients full control over their medical records using blockchain technology and IPFS storage.
 
-First, run the development server:
+## 🎯 MVP Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Patient Dashboard**: Upload health records securely to IPFS
+- **Provider Dashboard**: Request access to patient records
+- **Blockchain Access Control**: Smart contracts manage permissions
+- **Decentralized Storage**: Files stored on IPFS, metadata on blockchain
+- **Encryption**: Client-side encryption before IPFS upload
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🏗️ Architecture
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+\`\`\`
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   React Frontend │    │  Smart Contract │    │      IPFS       │
+│                 │    │   (Ethereum)    │    │   (Storage)     │
+├─────────────────┤    ├─────────────────┤    ├─────────────────┤
+│ • Patient UI    │◄──►│ • Access Control│    │ • Encrypted     │
+│ • Provider UI   │    │ • Metadata      │◄──►│   Files         │
+│ • File Upload   │    │ • Permissions   │    │ • File Hashes   │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+\`\`\`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Quick Start
 
-## Learn More
+### Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+- Node.js 18+
+- MetaMask browser extension
+- Git
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Clone the repository**
+   \`\`\`bash
+   git clone <repository-url>
+   cd healthchain-mvp
+   \`\`\`
 
-## Deploy on Vercel
+2. **Install dependencies**
+   \`\`\`bash
+   npm install
+   \`\`\`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Set up local blockchain**
+   \`\`\`bash
+   # Terminal 1: Start Hardhat node
+   npx hardhat node
+   
+   # Terminal 2: Deploy contracts
+   npm run compile
+   npm run deploy
+   \`\`\`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. **Configure MetaMask**
+   - Add local network: RPC URL `http://127.0.0.1:8545`, Chain ID `31337`
+   - Import test accounts from Hardhat node output
+
+5. **Start the application**
+   \`\`\`bash
+   npm run dev
+   \`\`\`
+
+6. **Open browser**
+   - Navigate to `http://localhost:3000`
+   - Connect MetaMask wallet
+
+## 📋 Usage Guide
+
+### For Patients
+
+1. **Connect Wallet**: Click "Connect Wallet" and approve MetaMask connection
+2. **Upload Records**: 
+   - Go to "Upload Records" tab
+   - Select a health record file (PDF, image, etc.)
+   - Click "Upload to Blockchain" - file is encrypted and stored on IPFS
+3. **Manage Access**:
+   - Review access requests in "Access Requests" tab
+   - Approve/deny provider requests
+   - Monitor active permissions in "Active Permissions" tab
+
+### For Healthcare Providers
+
+1. **Switch to Provider Mode**: Toggle to "Provider" in the header
+2. **Request Access**:
+   - Enter patient's wallet address
+   - Provide detailed reason for access
+   - Submit request
+3. **View Records**: Once approved, access patient records in "Patient Records" tab
+
+## 🔧 Technical Details
+
+### Smart Contract Functions
+
+```solidity
+// Store health record metadata
+function storeRecord(string memory _ipfsHash, string memory _fileName)
+
+// Request access to patient records  
+function requestAccess(address _patient, string memory _reason)
+
+// Grant access to provider
+function grantAccess(address _provider)
+
+// Revoke provider access
+function revokeAccess(address _provider)
+
+// Check if provider has access
+function checkAccess(address _patient, address _provider) returns (bool)
